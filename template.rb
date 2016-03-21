@@ -12,7 +12,6 @@ end
 def api_with_admin_install
   remove_turbolinks
   devise_auth?
-  active_admin?
   cucumber_capybara?
 end
 
@@ -20,7 +19,6 @@ def integrated_app_install
   integrated_app_gemfile
   remove_turbolinks
   devise?
-  active_admin?
   cucumber_capybara?
 end
 
@@ -131,7 +129,7 @@ def git_ignore_append
 end
 
 def smashing_docs?
-  if yes?("Add SmashingDocs for API documentation? (y/n)")
+  if yes?("Add smashing_docs for API documentation? (y/n)")
     @smashing_docs = true
     inject_into_file 'Gemfile', after: "group :development, :test do\n" do <<-RUBY
   # Use smashing_docs for API documentation
@@ -142,7 +140,7 @@ def smashing_docs?
 end
 
 def devise_auth?
-  if yes?("Add Devise_Auth? (y/n)")
+  if yes?("Add devise_token_auth? (y/n)")
     @devise_auth = true
     inject_into_file 'Gemfile', after: "gem 'taperole'\n" do <<-RUBY
 gem 'devise_token_auth'
@@ -152,22 +150,9 @@ gem 'devise_token_auth'
 end
 
 def devise?
-  if yes?("Add Devise? (y/n)")
+  if yes?("Add devise? (y/n)")
     @devise = true
     inject_into_file 'Gemfile', after: "gem 'taperole'\n" do <<-RUBY
-gem 'devise'
-    RUBY
-    end
-  end
-end
-
-def active_admin?
-  if yes?("Add ActiveAdmin? (y/n)")
-    @active_admin = true
-    gsub_file 'Gemfile', /gem 'devise'/, ""
-    inject_into_file 'Gemfile', after: "gem 'taperole'\n" do <<-RUBY
-  # Use activeadmin for admin interface
-gem 'activeadmin', '~> 1.0.0.pre2'
 gem 'devise'
     RUBY
     end
@@ -204,7 +189,7 @@ remove_file "Gemfile"
 # -----------------------------
 if yes?("Is this an API app? (y/n)")
   api_gemfile
-  if yes?("Does this API app have an admin interface?")
+  if yes?("Does this API app have an admin interface? (y/n)")
     api_with_admin_install
   else
     api_only_install
