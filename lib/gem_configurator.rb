@@ -54,8 +54,7 @@ def rubocop_config
   config.after(:suite) do
     examples = RSpec.world.filtered_examples.values.flatten
     if examples.none?(&:exception)
-      system("echo '\n' && bundle exec rubocop")
-      exit $? if $? != 0
+      exit 1 unless system("echo '\n' && bundle exec rubocop")
     end
   end
       RUBY
